@@ -8,53 +8,86 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
-document.querySelector('#dice-1').style.display = 'none';
-document.querySelector('#dice-2').style.display = 'none';
 
-
-var player, score, currentScore, dice;
+var player, score, activePlayer, currentScore, dice;
 
 player = ['0', '0'];
 score = 0;
 currentScore = 0;
+activePlayer = 0;
 
-$('.btn-new').click(newGame);
 
-$('.btn-roll').click(getDiceNumber);
+hideDice();
 
-function game() {
-    if (gamePlaying) {
-        
-    }
+
+function hideDice() {
+    document.querySelector('#dice-1').style.display = 'none';
+    document.querySelector('#dice-2').style.display = 'none';
+}
+
+function displayDice() {
+    document.querySelector('#dice-1').style.display = 'block';
+    document.querySelector('#dice-2').style.display = 'block';
 }
 
 function getDiceNumber() {
-    document.querySelector('#dice-1').style.display = 'block';
-    document.querySelector('#dice-2').style.display = 'block';
 
     x = Math.floor(Math.random() * (6)) + 1;
     y = Math.floor(Math.random() * (6)) + 1;
 
-    currentScore = x + y;
-    score += currentScore;
-
-    $('.player-current-score').text(currentScore);
-    $('.player-score').text(score);
-
     dice = [];
+    displayDice();
     dice[0] = $('#dice-1').attr('src', `dice-${x}.png`);
     dice[1] = $('#dice-2').attr('src', `dice-${y}.png`);
-    return dice;
+    currentScore = x + y;
+
+
+    if (x !== 1 && y !== 1) {
+        score += currentScore;
+        $(`#score-${activePlayer}`).text(score);
+        $(`#current-${activePlayer}`).text(currentScore);
+
+    } else {
+        nextPlayer();
+
+    }
+}
+
+
+function nextPlayer() {
+    //Next player
+    activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
+    roundScore = 0;
+
+    document.getElementById('current-0').textContent = 0;
+    document.getElementById('current-1').textContent = 0;
+
+    document.querySelector('.player-0-panel').classList.toggle('active');
+    document.querySelector('.player-1-panel').classList.toggle('active');
+
+    document.getElementById('dice-1').style.display = 'none';
+    document.getElementById('dice-2').style.display = 'none';
 }
 
 function newGame() {
-    document.querySelector('#dice-1').style.display = 'none';
-    document.querySelector('#dice-2').style.display = 'none';
+    hideDice();
 
     currentScore = 0;
     score = 0;
-    $('.player-current-score').text(currentScore);
-    $('.player-score').text(score);
+    $(`#current-${activePlayer}`).text(currentScore);
+    $(`#score-${activePlayer}`).text(score);
     $('#name-0').text('Player 1');
     $('#name-1').text('Player 2');
 }
+
+function hold() {
+    hideDice();
+    currentScore = 0;
+    $('.player-current-score').text(currentScore);
+}
+
+$('.btn-new').click(nextPlayer);
+
+$('.btn-hold').click(hold);
+
+$('.btn-roll').click(getDiceNumber);
