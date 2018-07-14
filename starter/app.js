@@ -9,13 +9,10 @@ GAME RULES:
 
 */
 
-var player, score, activePlayer, currentScore, dice;
+var player, score, activePlayer, currentScore, roundScore, dice;
 
-player = ['0', '0'];
-score = 0;
-currentScore = 0;
 activePlayer = 0;
-
+score = [0, 0]
 
 hideDice();
 
@@ -39,34 +36,37 @@ function getDiceNumber() {
     displayDice();
     dice[0] = $('#dice-1').attr('src', `dice-${x}.png`);
     dice[1] = $('#dice-2').attr('src', `dice-${y}.png`);
-    currentScore = x + y;
 
 
+    
     if (x !== 1 && y !== 1) {
-        score += currentScore;
-        $(`#score-${activePlayer}`).text(score);
-        $(`#current-${activePlayer}`).text(currentScore);
-
+        roundScore += x + y;
+        $(`#current-${activePlayer}`).text(roundScore);
     } else {
         nextPlayer();
-
     }
 }
+
+function hold() {
+    score[activePlayer] += roundScore;
+
+    $(`#score-${activePlayer}`).text(score[activePlayer]);
+    nextPlayer();
+}
+$('.btn-hold').click(hold);
 
 
 function nextPlayer() {
     //Next player
     activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
-    roundScore = 0;
 
-    document.getElementById('current-0').textContent = 0;
-    document.getElementById('current-1').textContent = 0;
+    roundScore = 0;
+    document.getElementById('current-0').textContent = roundScore;
+    document.getElementById('current-1').textContent = roundScore;
 
     document.querySelector('.player-0-panel').classList.toggle('active');
     document.querySelector('.player-1-panel').classList.toggle('active');
-
-    document.getElementById('dice-1').style.display = 'none';
-    document.getElementById('dice-2').style.display = 'none';
+    hideDice();
 }
 
 function newGame() {
@@ -80,14 +80,8 @@ function newGame() {
     $('#name-1').text('Player 2');
 }
 
-function hold() {
-    hideDice();
-    currentScore = 0;
-    $('.player-current-score').text(currentScore);
-}
 
-$('.btn-new').click(nextPlayer);
+$('.btn-new').click(newGame);
 
-$('.btn-hold').click(hold);
 
 $('.btn-roll').click(getDiceNumber);
