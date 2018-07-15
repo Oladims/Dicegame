@@ -34,8 +34,8 @@ function getDiceNumber() {
         var dice2 = Math.floor(Math.random() * (6)) + 1;
 
         displayDice();
-        $('#dice-1').attr('src', `dice-${dice1}.png`);
-        $('#dice-2').attr('src', `dice-${dice2}.png`);
+        $('#dice-1').attr('src', `images/dice-${dice1}.png`);
+        $('#dice-2').attr('src', `images/dice-${dice2}.png`);
 
         var currentScore = dice1 + dice2
 
